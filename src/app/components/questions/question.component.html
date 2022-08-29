@@ -1,0 +1,71 @@
+<mat-card
+  class="question-list__question"
+>
+  <h2>{{ question.text }}</h2>
+  <div class="question-detail">
+    <!-- if Single choice question type-->
+    <mat-radio-group
+      aria-label="Select an option"
+      *ngIf="question.type === 'Single choice'"
+      class="answer-options"
+    >
+      <mat-radio-button
+        [value]="option"
+        *ngFor="let option of question.options"
+        style="margin-bottom: 10px"
+        [disabled]="!question.isOpen"
+        (change)="checkRadioValue(option)"
+      >
+        {{ option }}
+      </mat-radio-button>
+    </mat-radio-group>
+
+    <!-- If Multiple choice question type -->
+    <section
+      class="answer-options"
+      *ngIf="question.type === 'Multiple choice'"
+    >
+      <mat-checkbox
+        *ngFor="let option of question.options"
+        [disabled]="!question.isOpen"
+        (change)="checkCheckBoxvalue(option, $event)"
+      >
+        {{ option }}
+      </mat-checkbox>
+    </section>
+
+    <!-- If Open question type -->
+    <mat-form-field
+      class="example-full-width"
+      appearance="fill"
+      *ngIf="question.type === 'Open question'"
+      (input)="checkInput($event)"
+    >
+      <mat-label>Enter your answer</mat-label>
+      <input
+        #answer
+        matInput
+        placeholder="Enter your answer"
+        [disabled]="!question.isOpen"
+        name="answer"
+      />
+    </mat-form-field>
+  </div>
+  <button
+    mat-raised-button
+    (click)="answer(question)"
+    [disabled]="!question.isOpen || !selectedAnswer.length && event?.target?.value?.length <= 0"
+    *ngIf="question.isOpen === true"
+  >
+    Answer
+  </button>
+  <div class='answer'>
+  <span *ngIf="question.isOpen === false" class="info-right">Right answer: {{ question.answer}}</span>
+  <span *ngIf="question.isOpen === false" class="info-bad">Your answer: {{ question.your_answer}}</span>
+  </div>
+  <div class="option-btn-container">
+    <button mat-raised-button *ngIf="question.isOpen ===false" (click)="toUnansered(question)">
+      Move to unanswered
+    </button>
+  </div>
+</mat-card>

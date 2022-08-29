@@ -1,0 +1,74 @@
+<div class="wrapper">
+    <p class="link">Admin panel</p>
+  <div class="container">
+    <div class="question-list">
+      <mat-expansion-panel
+        (opened)="openState = true"
+        (closed)="openState = false"
+        *ngFor="let question of questionList"
+        style="margin-bottom: 20px"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>{{ question.text }}</mat-panel-title>
+          <mat-panel-description>{{ question.type }}</mat-panel-description>
+          <mat-panel-description>
+            {{ question.creationDate }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="question-details">
+          <div class="question-detail">
+            <!-- if Single choice question type-->
+            <mat-radio-group
+              aria-label="Select an option"
+              *ngIf="question.type === 'Single choice'"
+              class="answer-options"
+            >
+              <mat-radio-button
+                [value]="option"
+                *ngFor="let option of question.options"
+                style="margin-bottom: 10px"
+              >
+                {{ option }}
+              </mat-radio-button>
+            </mat-radio-group>
+
+            <!-- If Multiple choice question type -->
+            <section
+              class="answer-options"
+              *ngIf="question.type === 'Multiple choice'"
+            >
+              <mat-checkbox *ngFor="let option of question.options">
+                {{ option }}
+              </mat-checkbox>
+            </section>
+
+            <!-- If Open question type -->
+            <mat-form-field
+              class="example-full-width"
+              appearance="fill"
+              *ngIf="question.type === 'Open question'"
+            >
+              <mat-label>Enet you answer</mat-label>
+              <input matInput placeholder="Enter your answer" />
+            </mat-form-field>
+          </div>
+          <div class="button-container">
+            <button mat-raised-button color="accent" (click)="editQuestion(question)">
+              Edit
+            </button>
+            <button
+              mat-raised-button
+              color="warn"
+              (click)="deleteQuestion(question.id)"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </div>
+    <button mat-raised-button class="add-question" (click)="addNewQuestion()">
+      Create new Question
+    </button>
+  </div>
+</div>

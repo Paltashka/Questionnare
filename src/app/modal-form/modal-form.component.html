@@ -1,0 +1,77 @@
+<div class="container">
+  <form [formGroup]="questionForm" class="form">
+    <mat-form-field appearance="fill">
+      <mat-label>Question text</mat-label>
+      <input matInput formControlName="text" required="true" />
+      <mat-error *ngIf="questionForm?.get('text')?.hasError('required')">Question text is required</mat-error>
+    </mat-form-field>
+
+
+    <mat-form-field appearance="fill">
+      <mat-label>Select a question type</mat-label>
+      <mat-select formControlName="type" required="true">
+        <mat-error *ngIf="questionForm?.get('type')?.hasError('required')">Question type is required</mat-error>
+        <mat-option
+          *ngFor="let type of questionType"
+          [value]="type"
+          (click)="checkQuestionType($event)"
+        >
+          {{ type }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field
+      class="example-chip-list"
+      appearance="fill"
+      *ngIf="isOpenQuestion"
+    >
+      <mat-label>Answer options</mat-label>
+      <mat-chip-list required="{{answerOptions.length < 2}}" formControlName="options"   #chipList aria-label="Answer options">
+        <mat-chip
+          *ngFor="let option of answerOptions"
+          (removed)="removeOption(option)"
+        >
+          {{ option }}
+          <button matChipRemove>
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip>
+        <input
+          placeholder="New option..."
+          [matChipInputFor]="chipList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          (matChipInputTokenEnd)="addOption($event)"
+          (input)="inputAnswerOption()"
+        />
+      </mat-chip-list>
+<!--      <mat-error *ngIf="questionForm?.get('chip')?.hasError('required')">Answer option is required</mat-error>-->
+      <mat-error *ngIf="answerOptions.length < 2">Answer option must contain at least 2 positions</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Right answer</mat-label>
+      <input matInput formControlName="answer" required="true" />
+      <mat-error *ngIf="questionForm?.get('answer')?.hasError('required')">Right answer is required</mat-error>
+    </mat-form-field>
+
+    <button
+      *ngIf="!isEdit"
+      type="submit"
+      mat-raised-button
+      class="option-btn"
+      (click)="addNewQuestion()"
+    >
+      Submit
+    </button>
+    <button
+      *ngIf="isEdit"
+      type="submit"
+      mat-raised-button
+      class="option-btn"
+      (click)="editQuestion()"
+    >
+      Save
+    </button>
+  </form>
+</div>

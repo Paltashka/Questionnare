@@ -1,0 +1,9 @@
+<div class="column">
+  <h2 class="title">Answered questions</h2>
+  <div class="question-list">
+    <app-questions
+      *ngFor="let question of answeredQuestions"
+      [question]="question"
+    ></app-questions>
+  </div>
+</div>
